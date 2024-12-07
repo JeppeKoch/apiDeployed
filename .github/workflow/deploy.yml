@@ -34,7 +34,7 @@ jobs:
         run: |
           # Define SSH connection info
           SSH_USER="jetty"
-          DO_DROPLET_IP="164.90.182.145"
+          DO_DROPLET_IP=${{secrets.DO_DROPLET_IP}}
           APP_NAME="spiceDeployed"
           REMOTE_PATH="/home/jetty/deployment/site/$APP_NAME/"
 
