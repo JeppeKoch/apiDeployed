@@ -56,6 +56,7 @@ function Home() {
     <ThemeProvider theme={theme}>
       <Container>
         <Header>Available APIs</Header>
+        <h1>Welcome</h1>
         <Content>
           <SubHeader>SpiceAPI</SubHeader>
           <Button to="/vision">View Vision</Button>
