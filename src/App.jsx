@@ -16,22 +16,40 @@ import './App.css'
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: ${props =>  props.theme.breakpoints.tablet}) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const Logo = styled.div`
   display: flex;
   align-items: center;
+
+    @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    margin-bottom: 15px;
+  }
 `;
 
 const LogoImg = styled.img`
   height: 40px;
   margin-right: 15px;
+
+    @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+    height: 30px;
+    margin-right: 10px;
+  }
 `;
 
 const LogoText = styled.h1`
   font-size: 1.8rem;
   color: white;
   margin: 0;
+
+    @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+    font-size: 1.4rem;
+  }
 `;
 
 const NavMenu = styled.nav`
@@ -48,6 +66,17 @@ const NavItem = styled(Link)`
     text-decoration: underline;
     font-weight: bold;
   }
+
+  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    gap: 20px;
+  }
+
+  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding-bottom: 0;
+  }
 `;
 
 // Content Layout
@@ -56,12 +85,22 @@ const Content = styled.div`
   margin-top: 20px;
   height: calc(100vh - 80px);
   color: #333;
+
+  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    flex-direction: column;
+    height: auto; 
+  }
 `;
 
 const LeftMenu = styled.div`
   width: 200px;
   background-color: #f4f4f4;
   padding: 20px;
+
+  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    display: none;
+  }
+
 `;
 
 const LeftMenuItem = styled(Link)`
@@ -80,6 +119,15 @@ const MainContent = styled.div`
   background-color: #fafafa;
   border-left: 2px solid #ccc;
   overflow-y: auto; /* Allows scrolling inside the main content if needed */
+
+  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
+    border-left: none;
+    border-top: 2px solid #ccc;
+  }
+
+  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+    padding: 15px;
+  }
 `;
 
 const ErrorBanner = styled.div`
@@ -90,7 +138,7 @@ const ErrorBanner = styled.div`
   border-radius: 5px;
 `;
 
-// test
+
 const App = () => {
   const [errorMessage, setErrorMessage] = React.useState(null);
   const [showRenderError, setShowRenderError] = React.useState(false);
@@ -107,13 +155,14 @@ const App = () => {
 
   return (
     <div>
-      <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
       <Header>
         <Logo onClick={()=>navigate('/home')}>
           <LogoImg
             src="https://culinarylabschool.com/wp-content/uploads/2018/03/spices.jpg"
             alt="Logo"
           />
+          <LogoText>MySite</LogoText>
         </Logo>
         <NavMenu>
           <NavItem to="/home">Home</NavItem>
@@ -123,13 +172,19 @@ const App = () => {
       </Header>
 
       <Content>
+
+        <LeftMenu>
+          <LeftMenuItem to="/link1">Link 1</LeftMenuItem>
+          <LeftMenuItem to="/link2">Link 2</LeftMenuItem>
+          <LeftMenuItem to="/link3">Link 3</LeftMenuItem>
+        </LeftMenu>
         <MainContent>
           {errorMessage && <ErrorBanner>{errorMessage}</ErrorBanner>}
           <Outlet context={{setErrorMessage}}/>
         </MainContent>
       </Content>
-      </ThemeProvider>
-    </div>
+    </ThemeProvider>
+  </div>
   );
 };
 

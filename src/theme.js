@@ -21,9 +21,11 @@ export const theme = {
         large: '24px',
     },
     breakpoints: {
-        mobile: '768px',
-        tablet: '1024px',
-        desktop: '1280px',
-    }
+        mobile: '480px',
+        tablet: '768px',
+        desktop: '1024px',
+    },
+
+
 
 }
