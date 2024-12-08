@@ -173,11 +173,11 @@ const App = () => {
 
       <Content>
 
-        <LeftMenu>
+        {/* <LeftMenu>
           <LeftMenuItem to="/link1">Link 1</LeftMenuItem>
           <LeftMenuItem to="/link2">Link 2</LeftMenuItem>
           <LeftMenuItem to="/link3">Link 3</LeftMenuItem>
-        </LeftMenu>
+        </LeftMenu> */}
         <MainContent>
           {errorMessage && <ErrorBanner>{errorMessage}</ErrorBanner>}
           <Outlet context={{setErrorMessage}}/>
