@@ -6,7 +6,6 @@ import React, {useEffect} from "react";
 import './App.css'
 
 
-  
   const Header = styled.header`
   // background-color: #2d3a3f;
   background-color: ${props => props.theme.darkSkyBlue};
