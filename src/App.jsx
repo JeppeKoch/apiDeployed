@@ -167,6 +167,8 @@ const App = () => {
           <NavItem to="/home">Home</NavItem>
           <NavItem to="/vision">Vision</NavItem>
           <NavItem to="/endpoints">Endpoints</NavItem>
+          <NavItem to="/spice">Spices</NavItem>
+          <NavItem to="/LoginPage">sign in</NavItem>
         </NavMenu>
       </Header>
 
