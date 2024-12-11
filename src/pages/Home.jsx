@@ -2,7 +2,8 @@
 import styled, { ThemeProvider } from "styled-components";
 import { Link } from "react-router-dom";
 import { theme } from "../theme";
-
+import { useEffect, useState } from "react";
+import { api } from "../services/Fetch";
 // Styled Components
 const Container = styled.div`
   text-align: center;
@@ -51,12 +52,36 @@ const Button = styled(Link)`
   }
 `;
 
+
+
+
 function Home() {
+
+  const [spices, setSpices] = useState([]); // State til at gemme krydderier
+
+  useEffect(() => {
+    const fetchSpices = async () => {
+        const data = await api.spices.getAll(); // Hent alle krydderier
+        setSpices(data || []); // Gem dem i state
+      
+    };
+
+    fetchSpices(); // Kald fetch-funktionen
+  }, []); // Tom array betyder, at useEffect kun kører én gang ved komponentets mount
+
+
   return (
     <ThemeProvider theme={theme}>
       <Container>
         <Header>Available APIs</Header>
         <h1>Welcome</h1>
+        <ul>
+      {spices.length > 0 ? (
+        spices.map((spice) => <li key={spice.id}>{spice.name}</li>)
+      ) : (
+        <p>Ingen krydderier fundet.</p>
+      )}
+    </ul>
         <Content>
           <SubHeader>SpiceAPI</SubHeader>
           <Button to="/vision">View Vision</Button>

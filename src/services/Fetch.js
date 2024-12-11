@@ -1,4 +1,4 @@
-const BASE_URL = "https://spice.danielherlev.dk/api"; 
+const BASE_URL = "/api"; 
 
 const getToken = () => {
   return localStorage.getItem("jwtToken");
@@ -106,7 +106,7 @@ async function fetchPut(endpoint, data, authenticated = false) {
       delete: (id, authenticated = true) => fetchDelete(`/cuisines/cuisine/${id}`, authenticated),
     },
     favorites: {
-      getAll: (authenticated = true) => fetchGet("/users/", authenticated),
+      getAll: (authenticated = false) => fetchGet("/users/", authenticated),
       getByUserId: (userId, authenticated = true) => fetchGet(`/users/${userId}/favorites`, authenticated),
       createFavorite: (username, data, authenticated = true) =>
         fetchPost(`/${username}/favorites`, data, authenticated),
