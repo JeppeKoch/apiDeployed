@@ -1,88 +1,121 @@
-const BASE_URL = "https://spice.danielherlev.dk/api";
+const BASE_URL = "https://spice.danielherlev.dk/api"; 
 
-async function fetchGet(endpoint) {
-    try {
-        const response = await fetch(`${BASE_URL}${endpoint}`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return await response.json();
-    } catch (error) {
-        console.error(`GET request failed for endpoint: ${endpoint}`, error);
+const getToken = () => {
+  return localStorage.getItem("jwtToken");
+};
+
+async function fetchGet(endpoint, authenticated = false) {
+  try {
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    if (authenticated && getToken()) {
+      headers["Authorization"] = `Bearer ${getToken()}`;
     }
+
+    const response = await fetch(`${BASE_URL}${endpoint}`, { method: "GET", headers });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(`GET request failed for endpoint: ${endpoint}`, error);
+  }
 }
 
-async function fetchPost(endpoint, data) {
-    try {
-        const response = await fetch(`${BASE_URL}${endpoint}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return await response.json();
-    } catch (error) {
-        console.error(`POST request failed for endpoint: ${endpoint}`, error);
+async function fetchPost(endpoint, data, authenticated = false) {
+  try {
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    if (authenticated && getToken()) {
+      headers["Authorization"] = `Bearer ${getToken()}`;
     }
+
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(`POST request failed for endpoint: ${endpoint}`, error);
+  }
 }
 
-async function fetchPut(endpoint, data) {
+async function fetchPut(endpoint, data, authenticated = false) {
     try {
-        const response = await fetch(`${BASE_URL}${endpoint}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return await response.json();
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      if (authenticated && getToken()) {
+        headers["Authorization"] = `Bearer ${getToken()}`;
+      }
+  
+      const response = await fetch(`${BASE_URL}${endpoint}`, {
+        method: "PUT",
+        headers,
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
     } catch (error) {
-        console.error(`PUT request failed for endpoint: ${endpoint}`, error);
+      console.error(`PUT request failed for endpoint: ${endpoint}`, error);
     }
-}
-
-async function fetchDelete(endpoint) {
+  }
+  
+  async function fetchDelete(endpoint, authenticated = false) {
     try {
-        const response = await fetch(`${BASE_URL}${endpoint}`, {
-            method: 'DELETE',
-        });
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return await response.json();
+      const headers = {};
+      if (authenticated && getToken()) {
+        headers["Authorization"] = `Bearer ${getToken()}`;
+      }
+  
+      const response = await fetch(`${BASE_URL}${endpoint}`, {
+        method: "DELETE",
+        headers,
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
     } catch (error) {
-        console.error(`DELETE request failed for endpoint: ${endpoint}`, error);
+      console.error(`DELETE request failed for endpoint: ${endpoint}`, error);
     }
-}
+  }
+  
 
-const api = {
+  export const api = {
     spices: {
-        getAll: () => fetchGet("/spices/"),
-        getById: (id) => fetchGet(`/spices/spice/${id}`),
-        create: (data) => fetchPost("/spices/spice", data),
-        update: (id, data) => fetchPut(`/spices/spice/${id}`, data),
-        delete: (id) => fetchDelete(`/spices/spice/${id}`),
+      getAll: () => fetchGet("/spices/"),
+      getById: (id) => fetchGet(`/spices/spice/${id}`),
+      create: (data, authenticated = true) => fetchPost("/spices/spice", data, authenticated),
+      update: (id, data, authenticated = true) => fetchPut(`/spices/spice/${id}`, data, authenticated),
+      delete: (id, authenticated = true) => fetchDelete(`/spices/spice/${id}`, authenticated),
     },
     cuisines: {
-        getAll: () => fetchGet("/cuisines/"),
-        getById: (id) => fetchGet(`/cuisines/cuisine/${id}`),
-        create: (data) => fetchPost("/cuisines/cuisine", data),
-        update: (id, data) => fetchPut(`/cuisines/cuisine/${id}`, data),
-        delete: (id) => fetchDelete(`/cuisines/cuisine/${id}`),
+      getAll: () => fetchGet("/cuisines/"),
+      getById: (id) => fetchGet(`/cuisines/cuisine/${id}`),
+      create: (data, authenticated = true) => fetchPost("/cuisines/cuisine", data, authenticated),
+      update: (id, data, authenticated = true) => fetchPut(`/cuisines/cuisine/${id}`, data, authenticated),
+      delete: (id, authenticated = true) => fetchDelete(`/cuisines/cuisine/${id}`, authenticated),
     },
     favorites: {
-        getAll: () => fetchGet("/users/"),
-        getByUserId: (userId) => fetchGet(`/users/${userId}/favorites`),
-        createFavorite: (username, data) => fetchPost(`/${username}/favorites`, data),
-        createSpiceFavorite: (username, spiceId) => fetchPost(`/${username}/favorites/spices/${spiceId}`),
-        createCuisineFavorite: (username, cuisineId) => fetchPost(`/${username}/favorites/cuisines/${cuisineId}`),
-        deleteFavorite: (userId, spiceId) => fetchDelete(`/users/${userId}/favorites/${spiceId}`),
+      getAll: (authenticated = true) => fetchGet("/users/", authenticated),
+      getByUserId: (userId, authenticated = true) => fetchGet(`/users/${userId}/favorites`, authenticated),
+      createFavorite: (username, data, authenticated = true) =>
+        fetchPost(`/${username}/favorites`, data, authenticated),
+      createSpiceFavorite: (username, spiceId, authenticated = true) =>
+        fetchPost(`/${username}/favorites/spices/${spiceId}`, null, authenticated),
+      createCuisineFavorite: (username, cuisineId, authenticated = true) =>
+        fetchPost(`/${username}/favorites/cuisines/${cuisineId}`, null, authenticated),
+      deleteFavorite: (userId, spiceId, authenticated = true) =>
+        fetchDelete(`/users/${userId}/favorites/${spiceId}`, authenticated),
     },
-};
+  };
+  
