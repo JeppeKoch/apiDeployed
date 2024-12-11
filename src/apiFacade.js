@@ -1,4 +1,4 @@
-const BASE_URL = "https://spice.danielherlev.dk/api";
+const BASE_URL = "/api";
 
 function handleHttpErrors(res) {
   if (!res.ok) {
