@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import styled, {ThemeProvider} from "styled-components";
-import { theme } from "../theme";
+import { theme } from "../components/Styles/theme";
 import { Link } from "react-router-dom";
 
 function Vision() {

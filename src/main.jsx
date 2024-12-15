@@ -1,11 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider, createRoutesFromElements, Route } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, createRoutesFromElements, Route } from "react-router";
 import Home from "./pages/Home";
 import Vision from "./pages/Vision";
 import Endpoints from "./pages/Endpoints";
 import Error404 from "./pages/Error404";
 import Spice from "./pages/spice";
+import Login from "./pages/LoginPage";
+import Register from "./components/Auth/Register";
+import facade  from "./services/apiFacade.js";
+
 
 import App from './App'
 
@@ -16,6 +20,8 @@ const router = createBrowserRouter(
       <Route path="vision" element={<Vision />} />
       <Route path="endpoints" element={<Endpoints />} />
       <Route path="spice" element={ <Spice /> } />
+      <Route path="auth/login" element={ <Login />} />
+      <Route path="auth/register" element={ <Register register={facade.register} />} />
       <Route path="*" element={<Error404/>}/>
    
     

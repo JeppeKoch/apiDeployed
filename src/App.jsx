@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import styled, {ThemeProvider} from "styled-components";
 import { Link, useLocation, useNavigate , Outlet} from "react-router-dom";
-import { theme } from "./theme";
+import { theme } from "./components/Styles/theme";
 import React, {useEffect} from "react";
 import './App.css'
 
@@ -91,16 +91,6 @@ const Content = styled.div`
   }
 `;
 
-const LeftMenu = styled.div`
-  width: 200px;
-  background-color: #f4f4f4;
-  padding: 20px;
-
-  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
-    display: none;
-  }
-
-`;
 
 const LeftMenuItem = styled(Link)`
   display: block;
@@ -168,7 +158,8 @@ const App = () => {
           <NavItem to="/vision">Vision</NavItem>
           <NavItem to="/endpoints">Endpoints</NavItem>
           <NavItem to="/spice">Spices</NavItem>
-          <NavItem to="/LoginPage">sign in</NavItem>
+          <NavItem to="/auth/login">Sign in</NavItem>
+          <NavItem to="/auth/register">Register</NavItem>
         </NavMenu>
       </Header>
 
