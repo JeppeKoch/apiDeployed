@@ -6,6 +6,7 @@ import Vision from "./pages/Vision";
 import Endpoints from "./pages/Endpoints";
 import Error404 from "./pages/Error404";
 import Spice from "./pages/spice";
+import UserPage from "./pages/UserPage";
 
 import App from './App'
 import UserPage from "./pages/UserPage";
@@ -17,6 +18,7 @@ const router = createBrowserRouter(
       <Route path="vision" element={<Vision />} />
       <Route path="endpoints" element={<UserPage />} />
       <Route path="spice" element={ <Spice /> } />
+      <Route path="userpage" element={ <UserPage/>}/>
       <Route path="*" element={<Error404/>}/>
    
     

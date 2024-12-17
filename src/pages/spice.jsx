@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../services/Fetch';
 import styled, { ThemeProvider } from "styled-components";
+import { Link } from 'react-router';
 
 const NavBar = styled.div`
 display: flex;
@@ -16,11 +17,6 @@ display: flex;
   }
 `;
 
-
-const Button = styled.button`
-  position: relative;
-  display: inline-block;
-`;
 
 const DropdownWrapper = styled.div`
   position: relative;
@@ -68,6 +64,22 @@ display: flex;
   align-content: center;
 
 `
+const Button = styled(Link)`
+  position: relative;
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+
+  font-size: ${(props) => props.theme.fontSizes.medium};
+  text-transform: uppercase;
+
+  &:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+  }
+`;
 
 function HomePage() {
   
@@ -108,6 +120,8 @@ function HomePage() {
       setShowTables(true)
     }
   }
+
+
   return (
     <>
            <NavBar>
@@ -148,6 +162,7 @@ function HomePage() {
                   <td>{spice.name}</td>
                   <td>{spice.description}</td>
                   <td>{spice.flavor_profile}</td>
+                  <td><Button to="/userpage">Add {view} to favorite list</Button></td>
                 </tr>
               ))}
             </tbody>
