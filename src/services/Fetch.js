@@ -1,4 +1,4 @@
-const BASE_URL = "/api"; 
+const BASE_URL = "https://spice.danielherlev.dk/api"; 
 
 const getToken = () => {
   return localStorage.getItem("jwtToken");
