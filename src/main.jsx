@@ -18,12 +18,8 @@ import App from './App'
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
-      <Route path="home" element={<Home />} />
-      <Route path="vision" element={<Vision />} />
-      <Route path="endpoints" element={<UserPage />} />
-      <Route path="spice" element={ <Spice /> } />
-      <Route path="userpage" element={ <UserPage/>}/>
-      <Route path="admin" element={<AdminPage />} />
+      <Route index element={<Spice />} />
+      <Route path="spice" element={<Spice />} />
       <Route path="auth/login" element={ <Login />} />
       <Route path="auth/register" element={ <Register register={facade.register} />} />
       <Route path="*" element={<Error404/>}/>
