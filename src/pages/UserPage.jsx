@@ -162,3 +162,74 @@ function UserPage() {
 }
 
 export default UserPage;
+function UserPage() {
+    const [users, setUsers] = useState([]);
+    const [favorites, setFavorites] = useState([]);
+    const [view, setView] = useState('spices');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [expandedRows, setExpandedRows] = useState([]);
+  
+    useEffect(() => {
+      api.favorites.getAll().then(data => {
+        setFavorites(data);
+      });
+    }, []);
+  
+    const filteredData = favorites.filter(item => 
+      item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  
+    const toggleRow = (id) => {
+      setExpandedRows(prev => 
+        prev.includes(id) ? prev.filter(rid => rid !== id) : [...prev, id]
+      );
+    };
+  
+    return (
+      <>
+   
+        {filteredData.length > 0 && (
+          <Table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Size</th>
+                <th>Show Content</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredData.map((favorite) => {
+                const isExpanded = expandedRows.includes(favorite.id);
+                return (
+                  <React.Fragment key={favorite.id}>
+                    <tr>
+                      <td>{favorite.name}</td>
+                      <td>{favorite.length}</td>
+                      <td>
+                        <Button as="button" onClick={() => toggleRow(favorite.id)}>
+                          {isExpanded ? 'Hide list' : 'Show list'}
+                        </Button>
+                      </td>
+                    </tr>
+                    {isExpanded && favorite.contents && (
+                      <tr>
+                      
+                          <ul>
+                            {favorites.map(content => (
+                              <li key={content.id}>{content.name}</li>
+                            ))}
+                          </ul>
+                     
+                      </tr>
+                    )}
+                  </React.Fragment>
+                );
+              })}
+            </tbody>
+          </Table>
+        )}
+      </>
+    );
+  }
+  
+  export default UserPage;
