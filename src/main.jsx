@@ -24,7 +24,7 @@ const router = createBrowserRouter(
       <Route path="spice" element={ <Spice /> } />
       <Route path="userpage" element={ <UserPage/>}/>
       <Route path="admin" element={<AdminPage />} />
-      Route path="auth/login" element={ <Login />} />
+      <Route path="auth/login" element={ <Login />} />
       <Route path="auth/register" element={ <Register register={facade.register} />} />
       <Route path="*" element={<Error404/>}/>
    
