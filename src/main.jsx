@@ -6,11 +6,12 @@ import Vision from "./pages/Vision";
 import Endpoints from "./pages/Endpoints";
 import Error404 from "./pages/Error404";
 import Spice from "./pages/spice";
+import AdminPage from "./pages/AdminPage";
 import Login from "./pages/LoginPage";
 import Register from "./components/Auth/Register";
 import facade  from "./services/apiFacade.js";
-
 import UserPage from "./pages/UserPage";
+
 
 import App from './App'
 
@@ -21,6 +22,8 @@ const router = createBrowserRouter(
       <Route path="vision" element={<Vision />} />
       <Route path="endpoints" element={<UserPage />} />
       <Route path="spice" element={ <Spice /> } />
+      <Route path="userpage" element={ <UserPage/>}/>
+      <Route path="admin" element={<AdminPage />} />
       Route path="auth/login" element={ <Login />} />
       <Route path="auth/register" element={ <Register register={facade.register} />} />
       <Route path="*" element={<Error404/>}/>
