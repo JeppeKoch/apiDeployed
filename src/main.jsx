@@ -9,7 +9,6 @@ import Spice from "./pages/spice";
 import UserPage from "./pages/UserPage";
 
 import App from './App'
-import UserPage from "./pages/UserPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(

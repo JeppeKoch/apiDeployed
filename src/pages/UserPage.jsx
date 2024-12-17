@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { api } from '../services/Fetch';
+import { useState, useEffect } from 'react';
 
 // Mock user data
 const mockUser = {
   name: "John Doe",
   userName: "john.doe@example.com",
   joinDate: "January 2024",
+
   avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=j"
 };
 
@@ -81,7 +83,21 @@ const Label = styled.h2`
 const Text = styled.p`
   color: #1f2937;
 `;
+const Table = styled.table`
+ width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  
+  th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+  }
 
+  th {
+    background-color: #f5f5f5;
+  }
+`
 const Button = styled.button`
   background-color: ${(props) => (props.active ? '#2563eb' : '#e5e7eb')};
   color: ${(props) => (props.active ? 'white' : '#374151')};
@@ -100,6 +116,7 @@ const Button = styled.button`
 function UserPage() {
   const user = mockUser;
   const [activeView, setActiveView] = useState(null);
+  const [favorites, setFavorites] = useState([])
 
   // Handler for the "Add New" button
   const handleAddNew = () => {
@@ -145,10 +162,33 @@ function UserPage() {
                 </Button>
                 <Button
                   active={activeView === 'cuisines'}
-                  onClick={() => setActiveView(activeView === 'cuisines' ? null : 'cuisines')}
+                  onClick={() => setActiveView(activeView === 'cuisines' ? null : 'cuisines')
+                  }
                 >
                 Cuisines
                 </Button>
+                {activeView &&(
+                    <Table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Flavor Profile</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                     {favorites.map(content => (
+                        <tr key={content.id}>
+                          <td>{content.name}</td>
+                          <td>{content.description}</td>
+                          <td>{content.flavor_profile}</td>
+                       </tr>
+                ))}
+                    </tbody>
+                  </Table>
+                )
+
+                }
                 <Button onClick={handleAddNew}>
                   Add New Spice/Cuisine to List
                 </Button>
@@ -162,74 +202,3 @@ function UserPage() {
 }
 
 export default UserPage;
-function UserPage() {
-    const [users, setUsers] = useState([]);
-    const [favorites, setFavorites] = useState([]);
-    const [view, setView] = useState('spices');
-    const [searchTerm, setSearchTerm] = useState('');
-    const [expandedRows, setExpandedRows] = useState([]);
-  
-    useEffect(() => {
-      api.favorites.getAll().then(data => {
-        setFavorites(data);
-      });
-    }, []);
-  
-    const filteredData = favorites.filter(item => 
-      item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  
-    const toggleRow = (id) => {
-      setExpandedRows(prev => 
-        prev.includes(id) ? prev.filter(rid => rid !== id) : [...prev, id]
-      );
-    };
-  
-    return (
-      <>
-   
-        {filteredData.length > 0 && (
-          <Table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Size</th>
-                <th>Show Content</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredData.map((favorite) => {
-                const isExpanded = expandedRows.includes(favorite.id);
-                return (
-                  <React.Fragment key={favorite.id}>
-                    <tr>
-                      <td>{favorite.name}</td>
-                      <td>{favorite.length}</td>
-                      <td>
-                        <Button as="button" onClick={() => toggleRow(favorite.id)}>
-                          {isExpanded ? 'Hide list' : 'Show list'}
-                        </Button>
-                      </td>
-                    </tr>
-                    {isExpanded && favorite.contents && (
-                      <tr>
-                      
-                          <ul>
-                            {favorites.map(content => (
-                              <li key={content.id}>{content.name}</li>
-                            ))}
-                          </ul>
-                     
-                      </tr>
-                    )}
-                  </React.Fragment>
-                );
-              })}
-            </tbody>
-          </Table>
-        )}
-      </>
-    );
-  }
-  
-  export default UserPage;
