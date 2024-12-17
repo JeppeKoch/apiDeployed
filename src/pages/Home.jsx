@@ -1,7 +1,7 @@
 
 import styled, { ThemeProvider } from "styled-components";
 import { Link } from "react-router-dom";
-import { theme } from "../theme";
+import { theme } from "../components/Styles/theme";
 import { useEffect, useState } from "react";
 import { api } from "../services/Fetch";
 // Styled Components
@@ -65,6 +65,17 @@ function Home() {
         setSpices(data || []); // Gem dem i state
       
     };
+    fetchSpices(); // Kald fetch-funktionen
+  }, []); // Tom array betyder, at useEffect kun kører én gang ved komponentets mount
+
+  useEffect(() => {
+    const fetchSpices = async () => {
+        const data = await api.spices.getById(); // Hent alle krydderier
+        setSpices(data || []); // Gem dem i state
+      
+    };
+
+    
 
     fetchSpices(); // Kald fetch-funktionen
   }, []); // Tom array betyder, at useEffect kun kører én gang ved komponentets mount

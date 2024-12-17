@@ -3,14 +3,15 @@
 import { useState, useEffect } from "react";
 import facade from "../util/ApiFacade";
 
-function LogIn({ login }) {
+function LogIn() {
   const init = { username: "", password: "" };
   const [loginCredentials, setLoginCredentials] = useState(init);
 
-  const performLogin = (evt) => {
+  const performLogin = async (evt) => {
     evt.preventDefault();
-    login(loginCredentials.username, loginCredentials.password);
+    await facade.login(loginCredentials.username, loginCredentials.password);
   };
+
   const onChange = (evt) => {
     setLoginCredentials({
       ...loginCredentials,
@@ -19,26 +20,24 @@ function LogIn({ login }) {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={performLogin}>
-        <input
-          placeholder="User Name"
-          id="username"
-          onChange={onChange}
-          value={loginCredentials.username}
-        />{" "}
-        <input
-          placeholder="Password"
-          id="password"
-          onChange={onChange}
-          value={loginCredentials.password}
-        />
-        <button type="submit">Login</button>
-      </form>
-      {JSON.stringify(loginCredentials)}
-    </div>
+    <form onSubmit={performLogin}>
+      <input
+        id="username"
+        onChange={onChange}
+        value={loginCredentials.username}
+        placeholder="Username"
+      />
+      <input
+        id="password"
+        onChange={onChange}
+        value={loginCredentials.password}
+        placeholder="Password"
+        type="password"
+      />
+      <button type="submit">Login</button>
+    </form>
   );
 }
 
 export default LogIn;
+
