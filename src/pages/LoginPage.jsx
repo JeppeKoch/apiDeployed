@@ -113,7 +113,6 @@ function Login() {
 
     try {
       await facade.login(username, password);
-      alert("Login successful!");
       setLoggedIn(true); 
       navigate("/Home"); 
     } catch (error) {
