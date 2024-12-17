@@ -89,10 +89,8 @@ function HomePage() {
   const [showTable, setShowTables] = useState(false);
   const [searchTerm, setSearchTerm] = useState('')
   const [view, setView] = useState('spices')
+  const [expandedCuisines, setExpandedCuisines] = useState([]);
 
-  // Simulate login/logout
-  const handleLogin = () => setIsLoggedIn(true);
-  const handleLogout = () => setIsLoggedIn(false);
 
   useEffect(() => {
     api.spices.getAll().then(data => {
@@ -107,7 +105,11 @@ function HomePage() {
     setShowTables(prev => !prev);
   };
 
-
+  const toggleCuisineDropdown = (id) => {
+    setExpandedCuisines(prev => 
+      prev.includes(id) ? prev.filter(cId => cId !== id) : [...prev, id]
+    );
+  };
   const dataToFilter = view === 'spices' ? spices : cuisines;
 
   const filteredData = dataToFilter.filter(item => 
@@ -157,26 +159,39 @@ function HomePage() {
               </tr>
             </thead>
             <tbody>
-              {filteredData.map((spice) => (
-                <tr key={spice.id}>
-                  <td>{spice.name}</td>
-                  <td>{spice.description}</td>
-                  <td>{spice.flavor_profile}</td>
+              {filteredData.map((content) => (
+                <tr key={content.id}>
+                  <td>{content.name}</td>
+                  <td>{content.description}</td>
+                  <td>{content.flavor_profile}</td>
+
                   <td><Button to="/userpage">Add {view} to favorite list</Button></td>
+
+
+                 
+                  {view === 'cuisines' && content.spices && (
+                    <>
+                    <td>
+                      <Button onClick={() => toggleCuisineDropdown(content.id)}>
+                        {expandedCuisines.includes(content.id) ? 'Hide recommended spices' : 'View recommended spices'}
+                        </Button>
+                        </td>
+
+
+                        {expandedCuisines.includes(content.id) && (
+                          <td>
+                            {content.spices.map((spice) => spice.name).join(', ')}
+                            </td>
+                          )}
+                          
+                          </>
+                        )}
                 </tr>
               ))}
             </tbody>
           </Table>
         )}
       </DropdownWrapper>
-
-      {isLoggedIn && (
-        <div>
-          <button>Favorite List</button>
-          <button>Search</button>
-          <button>Add Spice</button>
-        </div>
-      )}
     </>
   );
 }
