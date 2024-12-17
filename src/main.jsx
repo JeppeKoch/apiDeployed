@@ -10,6 +10,7 @@ import Login from "./pages/LoginPage";
 import Register from "./components/Auth/Register";
 import facade  from "./services/apiFacade.js";
 
+import UserPage from "./pages/UserPage";
 
 import App from './App'
 
@@ -18,9 +19,9 @@ const router = createBrowserRouter(
     <Route path="/" element={<App />}>
       <Route path="home" element={<Home />} />
       <Route path="vision" element={<Vision />} />
-      <Route path="endpoints" element={<Endpoints />} />
+      <Route path="endpoints" element={<UserPage />} />
       <Route path="spice" element={ <Spice /> } />
-      <Route path="auth/login" element={ <Login />} />
+      Route path="auth/login" element={ <Login />} />
       <Route path="auth/register" element={ <Register register={facade.register} />} />
       <Route path="*" element={<Error404/>}/>
    
