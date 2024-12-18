@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router";
-
+import { useNavigate, useOutletContext } from "react-router"; // Hent Outlet Context for at opdatere login-status
+import facade from "../../services/apiFacade"; // Importer apiFacade
 
 const RegisterContainer = styled.div`
   display: flex;
@@ -42,6 +42,12 @@ const SubmitButton = styled.button`
   background-color: white;
   color: ${({ theme }) => theme.colors.darkSkyBlue};
   border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.lightSkyBlue};
+    color: white;
+  }
 `;
 
 const ErrorMessage = styled.p`
@@ -49,40 +55,40 @@ const ErrorMessage = styled.p`
   margin-top: ${({ theme }) => theme.spacing.small};
 `;
 
-// eslint-disable-next-line react/prop-types
-function Register({ register }) {
-    const navigate = useNavigate();
-    const [registerCredentials, setRegisterCredentials] = useState({
-      username: "",
-      password: "",
-      confirmPassword: "",
-    });
-    const [errorMessage, setErrorMessage] = useState("");
+function Register() {
+  const navigate = useNavigate();
+  const { setIsLoggedIn } = useOutletContext(); // Hent setIsLoggedIn fra App via Outlet Context
 
+  const [registerCredentials, setRegisterCredentials] = useState({
+    username: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [errorMessage, setErrorMessage] = useState("");
 
-    const handleRegister = async (e) => {
-      e.preventDefault();
-  
-      if (registerCredentials.password !== registerCredentials.confirmPassword) {
-        setErrorMessage("Passwords do not match");
-        return;
-      }
-  
-      try {
-        await register(registerCredentials.username, registerCredentials.password);
-        alert(`Registered successfully with username: ${registerCredentials.username}`);
-        navigate("/auth/login");
-      } catch (error) {
-        if (error.status === 400 && error.message.includes("User with username")) {
-          setErrorMessage("Username already exists. Please choose another.");
-        } else {
-          setErrorMessage(error.message || "Registration failed. Please try again.");
-        }
-      }
-    };
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    if (registerCredentials.password !== registerCredentials.confirmPassword) {
+      setErrorMessage("Passwords do not match");
+      return;
+    }
+
+    try {
+      await facade.register(registerCredentials.username, registerCredentials.password);
+      // Automatisk log ind efter succesfuld registrering
+      await facade.login(registerCredentials.username, registerCredentials.password);
+      setIsLoggedIn(true); // Opdater App's login-status
+      navigate("/home"); // Naviger brugeren til Home
+    } catch (error) {
+      setErrorMessage(
+        error.message || "Registration failed. Please try again."
+      );
+    }
+  };
 
   const onChange = (evt) => {
-    setErrorMessage("")
+    setErrorMessage(""); // Nulstil fejlbesked
     setRegisterCredentials({
       ...registerCredentials,
       [evt.target.id]: evt.target.value,
@@ -102,6 +108,7 @@ function Register({ register }) {
               type="text"
               value={registerCredentials.username}
               onChange={onChange}
+              required
             />
           </FormGroup>
           <FormGroup>
@@ -111,6 +118,7 @@ function Register({ register }) {
               type="password"
               value={registerCredentials.password}
               onChange={onChange}
+              required
             />
           </FormGroup>
           <FormGroup>
@@ -118,8 +126,9 @@ function Register({ register }) {
             <Input
               id="confirmPassword"
               type="password"
-              value={registerCredentials.confirmPasswordpassword}
+              value={registerCredentials.confirmPassword}
               onChange={onChange}
+              required
             />
           </FormGroup>
           <SubmitButton type="submit">Register</SubmitButton>
