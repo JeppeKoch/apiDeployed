@@ -118,16 +118,13 @@ function UserPage() {
   const user = mockUser;
   const [activeView, setActiveView] = useState(null);
   const [favorites, setFavorites] = useState([])
-  const {id, username} = useParams()
 
   // Handler for the "Add New" button
   const handleAddNew = () => {
     alert("Redirect or open a modal to add a new spice or cuisine.");
   };
 
-  const addContent = () => {
-    api.favorites.createSpiceFavorite(username ,id)
-  }
+
 
   return (
     <Container>
