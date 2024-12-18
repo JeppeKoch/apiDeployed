@@ -1,15 +1,15 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useOutletContext } from "react-router";
 import styled from "styled-components";
 import facade from "../services/apiFacade";
 
+// Styled components
 const LoginContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   background-color: ${({ theme }) => theme.colors.lightSkyBlue};
-  font-family: ${({ theme }) => theme.fonts.primary};
 `;
 
 const LoginBox = styled.div`
@@ -20,12 +20,6 @@ const LoginBox = styled.div`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 300px;
   text-align: left;
-
-  h2 {
-    font-family: ${({ theme }) => theme.fonts.heading};
-    font-size: ${({ theme }) => theme.fontSizes.large};
-    margin-bottom: ${({ theme }) => theme.spacing.medium};
-  }
 `;
 
 const FormGroup = styled.div`
@@ -34,33 +28,28 @@ const FormGroup = styled.div`
 
 const Label = styled.label`
   display: block;
-  font-size: ${({ theme }) => theme.fontSizes.medium};
-  margin-bottom: ${({ theme }) => theme.spacing.small};
+  margin-bottom: 5px;
 `;
 
 const Input = styled.input`
   width: 100%;
-  padding: ${({ theme }) => theme.spacing.small};
+  padding: 8px;
   border: none;
   border-radius: 4px;
-  font-size: ${({ theme }) => theme.fontSizes.medium};
-  color: ${({ theme }) => theme.colors.darkSkyBlue};
 `;
 
 const ErrorMessage = styled.p`
   color: #f44336;
-  font-size: ${({ theme }) => theme.fontSizes.small};
-  margin-bottom: ${({ theme }) => theme.spacing.small};
+  margin-bottom: 10px;
 `;
 
 const SubmitButton = styled.button`
   width: 100%;
-  padding: ${({ theme }) => theme.spacing.small};
+  padding: 8px;
   background-color: white;
   color: ${({ theme }) => theme.colors.darkSkyBlue};
   border: none;
   border-radius: 4px;
-  font-size: ${({ theme }) => theme.fontSizes.medium};
   cursor: pointer;
 
   &:hover {
@@ -69,105 +58,54 @@ const SubmitButton = styled.button`
   }
 `;
 
-const RegisterButton = styled.button`
-  width: 100%;
-  padding: ${({ theme }) => theme.spacing.small};
-  background-color: ${({ theme }) => theme.colors.darkSkyBlue};
-  color: white;
-  border: 1px solid white;
-  border-radius: 4px;
-  font-size: ${({ theme }) => theme.fontSizes.medium};
-  cursor: pointer;
-
-  &:hover {
-    background-color: white;
-    color: ${({ theme }) => theme.colors.darkSkyBlue};
-  }
-`;
-
-const LogoutButton = styled.button`
-  margin-top: ${({ theme }) => theme.spacing.medium};
-  width: 100%;
-  padding: ${({ theme }) => theme.spacing.small};
-  background-color: #f44336;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: ${({ theme }) => theme.fontSizes.medium};
-  cursor: pointer;
-
-  &:hover {
-    background-color: #d32f2f;
-  }
-`;
-
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
-  const [loggedIn, setLoggedIn] = useState(facade.loggedIn());
+
   const navigate = useNavigate();
+  const { setIsLoggedIn } = useOutletContext(); // Få adgang til App's state
 
   async function HandleLogin(event) {
     event.preventDefault();
 
     try {
-      await facade.login(username, password);
-      setLoggedIn(true); 
-      navigate("/"); 
+      await facade.login(username, password); // Antager facade håndterer API-login
+      setIsLoggedIn(true); // Opdater App's state
+      navigate("/home"); // Send brugeren til home
     } catch (error) {
-      if (error.status === 401) {
-        setErrorMessage("Invalid username or password.");
-      } else {
-        setErrorMessage("Something went wrong. Please try again."); 
-      }
+      setErrorMessage(
+        error.status === 401
+          ? "Invalid username or password."
+          : "Something went wrong. Please try again."
+      );
     }
-  }
-
-  function handleLogout() {
-    facade.logout();
-    setLoggedIn(false); 
-    alert("You have been logged out.");
-    navigate("/"); 
-  }
-
-  function handleRegister() {
-    navigate("/auth/register");
   }
 
   return (
     <LoginContainer>
       <LoginBox>
-        <h2>{loggedIn ? "Welcome!" : "Login"}</h2>
+        <h2>Login</h2>
         {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-        {!loggedIn ? (
-          <form onSubmit={HandleLogin}>
-            <FormGroup>
-              <Label htmlFor="username">Username</Label>
-              <Input
-                type="text"
-                id="username"
-                placeholder="Indtast dit brugernavn"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label htmlFor="password">Password</Label>
-              <Input
-                type="password"
-                id="password"
-                placeholder="Indtast dit password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </FormGroup>
-            <SubmitButton type="submit">Login</SubmitButton>
-          </form>
-        ) : (
-          <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
-        )}
-        {!loggedIn && <RegisterButton onClick={handleRegister}>Register</RegisterButton>}
+        <form onSubmit={HandleLogin}>
+          <FormGroup>
+            <Label>Username</Label>
+            <Input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label>Password</Label>
+            <Input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </FormGroup>
+          <SubmitButton type="submit">Login</SubmitButton>
+        </form>
       </LoginBox>
     </LoginContainer>
   );

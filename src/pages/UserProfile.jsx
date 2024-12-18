@@ -1,6 +1,4 @@
-import React from 'react';
 import styled from 'styled-components';
-import { api } from '../services/Fetch';
 import { useState, useEffect } from 'react';
 
 // Mock user data
@@ -113,7 +111,7 @@ const Button = styled.button`
   }
 `;
 
-function UserPage() {
+function UserProfile() {
   const user = mockUser;
   const [activeView, setActiveView] = useState(null);
   const [favorites, setFavorites] = useState([])
@@ -201,4 +199,4 @@ function UserPage() {
   );
 }
 
-export default UserPage;
+export default UserProfile;
