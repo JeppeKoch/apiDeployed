@@ -1,6 +1,5 @@
-@url = https://spice.danielherlev.dk/api/spices
+@url = https://spice.danielherlev.dk/api/users/
 
-@jwt_token = eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJKb24gQmVydGVsc2VuIiwic3ViIjoidXNlciIsImV4cCI6MTczMzU5NzIzNiwicm9sZXMiOiJVU0VSIiwidXNlcm5hbWUiOiJ1c2VyIn0.Lr2tqkRjjmvHDCmcpxkP3_mFwCCFcXeFOF4i3Kda1oI
-
+@jwt_token = eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJNb2xkYSIsInN1YiI6Im1pbmdvIiwiZXhwIjoxNzM0NTE3NzY2LCJyb2xlcyI6IkFETUlOIiwidXNlcm5hbWUiOiJtaW5nbyJ9.Ia-Q75OZvP8SMSU4lGwDV1VyVDK-dwprVETK2dJMfyo
 ###
 GET {{url}}
