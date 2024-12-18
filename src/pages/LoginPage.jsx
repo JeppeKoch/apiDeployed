@@ -72,6 +72,8 @@ function Login() {
       await facade.login(username, password);
       setIsLoggedIn(true); // Opdater login-status i App
       navigate("/home");
+      setLoggedIn(true); 
+      navigate("/"); 
     } catch (error) {
       if (error.status === 401) {
         setErrorMessage("Invalid username or password.");
@@ -79,6 +81,17 @@ function Login() {
         setErrorMessage("Something went wrong. Please try again.");
       }
     }
+  }
+
+  function handleLogout() {
+    facade.logout();
+    setLoggedIn(false); 
+    alert("You have been logged out.");
+    navigate("/"); 
+  }
+
+  function handleRegister() {
+    navigate("/auth/register");
   }
 
   return (
