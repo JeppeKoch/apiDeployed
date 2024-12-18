@@ -111,9 +111,9 @@ async function fetchPut(endpoint, data, authenticated = false) {
       createFavorite: (username, data, authenticated = true) =>
         fetchPost(`/${username}/favorites`, data, authenticated),
       createSpiceFavorite: (username, spiceId, authenticated = true) =>
-        fetchPost(`/${username}/favorites/spices/${spiceId}`, null, authenticated),
+        fetchPost(`/users/${username}/favorites/spices/${spiceId}`, null, authenticated),
       createCuisineFavorite: (username, cuisineId, authenticated = true) =>
-        fetchPost(`/${username}/favorites/cuisines/${cuisineId}`, null, authenticated),
+        fetchPost(`/users/${username}/favorites/cuisines/${cuisineId}`, null, authenticated),
       deleteFavorite: (userId, spiceId, authenticated = true) =>
         fetchDelete(`/users/${userId}/favorites/${spiceId}`, authenticated),
     },

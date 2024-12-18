@@ -1,3 +1,4 @@
+
 const BASE_URL = "https://spice.danielherlev.dk/api";
 
 function handleHttpErrors(res) {
@@ -13,6 +14,7 @@ function handleHttpErrors(res) {
 }
 
 const apiFacade = () => {
+ 
   const setToken = (token) => {
     localStorage.setItem("jwtToken", token);
   };
@@ -33,6 +35,7 @@ const apiFacade = () => {
     const options = makeOptions("POST", false, { username, password });
     const response = await fetch(`${BASE_URL}/auth/login`, options);
 
+
     if (!response.ok){
       const errorData = await response.json();
       throw {
@@ -41,7 +44,10 @@ const apiFacade = () => {
 
     const data = await response.json();
     setToken(data.token);
+    
   };
+
+
   
 
   const register = async (username, password) => {
@@ -86,6 +92,7 @@ const apiFacade = () => {
     logout,
     register,
     fetchData, // Can handle GET, POST, PUT, DELETE with options
+
   };
 }
 

@@ -81,7 +81,7 @@ function AdminPage() {
   /* DELETE */
   const deleteSpice = async (id) => {
     try {
-      await api.spices.delete(id, true);
+      await facade.fetchData(`/spices/spice/${id}`, "DELETE");
       setSpices(spices.filter((spice) => spice.id !== id));
     } catch (error) {
       console.error("Failed to delete spice:", error);
