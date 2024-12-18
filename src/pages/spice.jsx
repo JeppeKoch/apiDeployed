@@ -165,7 +165,7 @@ function HomePage() {
                   <td>{content.description}</td>
                   <td>{content.flavor_profile}</td>
 
-                  <td><Button to="/userpage">Add {view} to favorite list</Button></td>
+                  <td><Button to="/userpage/${content.id}/${currentUsername}">Add {view} to favorite list</Button></td>
 
 
                  
