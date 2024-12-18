@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from "../services/Fetch";
+import facade from "../services/apiFacade";
 
 function AdminPage() {
   /* FETCH */
@@ -89,12 +90,13 @@ function AdminPage() {
 
   const deleteCuisine = async (id) => {
     try {
-      await api.cuisines.delete(id, true);
+      await facade.fetchData(`/cuisines/cuisine/${id}`, "DELETE");
       setCuisines(cuisines.filter((cuisine) => cuisine.id !== id));
     } catch (error) {
       console.error("Failed to delete cuisine:", error);
     }
   };
+
 
   const deleteUser = async (id) => {
     try {

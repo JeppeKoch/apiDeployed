@@ -2,6 +2,7 @@ const BASE_URL = "https://spice.danielherlev.dk/api";
 
 const getToken = () => {
   return localStorage.getItem("jwtToken");
+  
 };
 
 async function fetchGet(endpoint, authenticated = false) {

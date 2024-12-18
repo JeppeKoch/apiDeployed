@@ -25,8 +25,10 @@ const router = createBrowserRouter(
       <Route path="auth/login" element={ <Login />} />
       <Route path="auth/register" element={ <Register register={facade.register} />} />
       <Route path="*" element={<Error404/>}/>
-   
-    
+      <Route path="admin" element={<AdminPage />} />
+      <Route path="userpage" element={ <UserPage/>}/>
+
+  
     </Route>
   )
 );

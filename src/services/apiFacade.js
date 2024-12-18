@@ -2,11 +2,14 @@ const BASE_URL = "https://spice.danielherlev.dk/api";
 
 function handleHttpErrors(res) {
   if (!res.ok) {
+    if (res.status === 204) { // No Content
+      return null;
+    }
     return res.json().then((err) => {
       throw { status: res.status, ...err };
     });
   }
-  return res.json();
+  return res.status === 204 ? null : res.json();
 }
 
 const apiFacade = () => {

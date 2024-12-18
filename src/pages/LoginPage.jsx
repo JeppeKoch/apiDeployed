@@ -70,9 +70,10 @@ function Login() {
     event.preventDefault();
 
     try {
-      await facade.login(username, password); // Antager facade håndterer API-login
-      setIsLoggedIn(true); // Opdater App's state
-      navigate("/home"); // Send brugeren til home
+      await facade.login(username, password);
+      setLoggedIn(true);
+       
+      navigate("/"); 
     } catch (error) {
       setErrorMessage(
         error.status === 401
