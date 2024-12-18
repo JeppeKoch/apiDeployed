@@ -3,6 +3,7 @@ import { useNavigate, useOutletContext } from "react-router";
 import styled from "styled-components";
 import facade from "../services/apiFacade";
 
+// Styled components
 const LoginContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -69,29 +70,16 @@ function Login() {
     event.preventDefault();
 
     try {
-      await facade.login(username, password);
-      setIsLoggedIn(true); // Opdater login-status i App
-      navigate("/home");
-      setLoggedIn(true); 
-      navigate("/"); 
+      await facade.login(username, password); // Antager facade håndterer API-login
+      setIsLoggedIn(true); // Opdater App's state
+      navigate("/home"); // Send brugeren til home
     } catch (error) {
-      if (error.status === 401) {
-        setErrorMessage("Invalid username or password.");
-      } else {
-        setErrorMessage("Something went wrong. Please try again.");
-      }
+      setErrorMessage(
+        error.status === 401
+          ? "Invalid username or password."
+          : "Something went wrong. Please try again."
+      );
     }
-  }
-
-  function handleLogout() {
-    facade.logout();
-    setLoggedIn(false); 
-    alert("You have been logged out.");
-    navigate("/"); 
-  }
-
-  function handleRegister() {
-    navigate("/auth/register");
   }
 
   return (
