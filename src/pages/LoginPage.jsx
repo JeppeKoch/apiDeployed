@@ -62,6 +62,7 @@ function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
+  
 
   const navigate = useNavigate();
   const { setIsLoggedIn } = useOutletContext(); // Få adgang til App's state
@@ -72,6 +73,7 @@ function Login() {
     try {
       await facade.login(username, password); // Antager facade håndterer API-login
       setIsLoggedIn(true); // Opdater App's state
+  
       navigate("/"); // Send brugeren til home
     } catch (error) {
       setErrorMessage(

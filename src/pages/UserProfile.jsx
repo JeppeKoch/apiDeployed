@@ -1,5 +1,8 @@
 import styled from 'styled-components';
-import { useState, useEffect } from 'react';
+import { useState, useEffect} from 'react';
+import { useParams } from 'react-router';
+import { api } from '../services/Fetch';
+import facade from '../services/apiFacade';
 
 // Mock user data
 const mockUser = {
@@ -115,11 +118,29 @@ function UserProfile() {
   const user = mockUser;
   const [activeView, setActiveView] = useState(null);
   const [favorites, setFavorites] = useState([])
+  const {id, username, listType } = useParams();
 
   // Handler for the "Add New" button
   const handleAddNew = () => {
     alert("Redirect or open a modal to add a new spice or cuisine.");
   };
+
+  // useEffect(() => {
+  //   api.favorites.getByUserId(userId).then(data => {
+  //     setFavorites(data);
+  //   })
+  // }, []);
+
+
+  const addContent = () => {
+    if(listType === "spices"){
+    api.favorites.createSpiceFavorite(username, id)
+  }
+  else if(listType === "cuisines"){
+    api.favorites.createCuisineFavorite(username, id)
+  }
+  
+  }
 
   return (
     <Container>
@@ -165,6 +186,8 @@ function UserProfile() {
                 >
                 Cuisines
                 </Button>
+
+                <td><Button onClick={addContent}>Add {listType} to list</Button></td>
                 {activeView &&(
                     <Table>
                     <thead>

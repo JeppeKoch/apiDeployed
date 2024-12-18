@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import { api } from '../services/Fetch';
 import styled, { ThemeProvider } from "styled-components";
 import { Link } from 'react-router';
+import { jwtDecode } from 'jwt-decode';
+import facade from '../services/apiFacade';
+
 
 const NavBar = styled.div`
 display: flex;
@@ -90,6 +93,16 @@ function HomePage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [view, setView] = useState('spices')
   const [expandedCuisines, setExpandedCuisines] = useState([]);
+  const token = facade.getToken()
+  let username = null
+
+
+    if(token){
+      const decoded = jwtDecode(token);
+        username = decoded.sub
+  }
+
+
 
 
   useEffect(() => {
@@ -165,7 +178,7 @@ function HomePage() {
                   <td>{content.description}</td>
                   <td>{content.flavor_profile}</td>
 
-                  <td><Button to="/userpage">Add {view} to favorite list</Button></td>
+                  <td><Button to={`/userpage/${content.id}/${username}/${view}`}>Add {view} to favorite list</Button></td>
 
 
                  
