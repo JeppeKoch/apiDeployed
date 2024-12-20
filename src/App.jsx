@@ -3,6 +3,7 @@ import styled, { ThemeProvider } from "styled-components";
 import { Link, useLocation, useNavigate, Outlet } from "react-router";
 import { theme } from "./components/Styles/theme";
 import "./App.css";
+import facade from "./services/apiFacade";
 
 // Styled components
 const Header = styled.header`
@@ -93,6 +94,7 @@ const App = () => {
 
   
   const handleLogout = () => {
+    facade.logout()
     setIsLoggedIn(false);
     navigate("/auth/login");
   };
