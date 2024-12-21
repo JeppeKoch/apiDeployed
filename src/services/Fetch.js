@@ -1,7 +1,8 @@
-const BASE_URL = "/api"; 
+const BASE_URL = "https://spice.danielherlev.dk/api"; 
 
 const getToken = () => {
   return localStorage.getItem("jwtToken");
+  
 };
 
 async function fetchGet(endpoint, authenticated = false) {
@@ -106,16 +107,19 @@ async function fetchPut(endpoint, data, authenticated = false) {
       delete: (id, authenticated = true) => fetchDelete(`/cuisines/cuisine/${id}`, authenticated),
     },
     favorites: {
-      getAll: (authenticated = false) => fetchGet("/users/", authenticated),
       getByUserId: (userId, authenticated = true) => fetchGet(`/users/${userId}/favorites`, authenticated),
       createFavorite: (username, data, authenticated = true) =>
         fetchPost(`/${username}/favorites`, data, authenticated),
       createSpiceFavorite: (username, spiceId, authenticated = true) =>
-        fetchPost(`/${username}/favorites/spices/${spiceId}`, null, authenticated),
+        fetchPost(`/users/${username}/favorites/spices/${spiceId}`, null, authenticated),
       createCuisineFavorite: (username, cuisineId, authenticated = true) =>
-        fetchPost(`/${username}/favorites/cuisines/${cuisineId}`, null, authenticated),
+        fetchPost(`/users/${username}/favorites/cuisines/${cuisineId}`, null, authenticated),
       deleteFavorite: (userId, spiceId, authenticated = true) =>
         fetchDelete(`/users/${userId}/favorites/${spiceId}`, authenticated),
+    },
+    user: {
+      getAll: (authenticated = true) => fetchGet("/users/", authenticated),
+      getById: (userId, authenticated = false) => fetchGet(`/users/${userId}`, authenticated),
     },
   };
   

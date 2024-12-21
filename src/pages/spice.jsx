@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import { api } from '../services/Fetch';
 import styled, { ThemeProvider } from "styled-components";
 import { Link } from 'react-router';
+import { jwtDecode } from 'jwt-decode';
+import facade from '../services/apiFacade';
+
 
 const NavBar = styled.div`
 display: flex;
@@ -89,10 +92,18 @@ function HomePage() {
   const [showTable, setShowTables] = useState(false);
   const [searchTerm, setSearchTerm] = useState('')
   const [view, setView] = useState('spices')
+  const [expandedCuisines, setExpandedCuisines] = useState([]);
+  const token = facade.getToken()
+  let username = null
 
-  // Simulate login/logout
-  const handleLogin = () => setIsLoggedIn(true);
-  const handleLogout = () => setIsLoggedIn(false);
+
+    if(token){
+      const decoded = jwtDecode(token);
+        username = decoded.sub
+  }
+
+
+
 
   useEffect(() => {
     api.spices.getAll().then(data => {
@@ -107,7 +118,11 @@ function HomePage() {
     setShowTables(prev => !prev);
   };
 
-
+  const toggleCuisineDropdown = (id) => {
+    setExpandedCuisines(prev => 
+      prev.includes(id) ? prev.filter(cId => cId !== id) : [...prev, id]
+    );
+  };
   const dataToFilter = view === 'spices' ? spices : cuisines;
 
   const filteredData = dataToFilter.filter(item => 
@@ -157,26 +172,39 @@ function HomePage() {
               </tr>
             </thead>
             <tbody>
-              {filteredData.map((spice) => (
-                <tr key={spice.id}>
-                  <td>{spice.name}</td>
-                  <td>{spice.description}</td>
-                  <td>{spice.flavor_profile}</td>
-                  <td><Button to="/userpage">Add {view} to favorite list</Button></td>
+              {filteredData.map((content) => (
+                <tr key={content.id}>
+                  <td>{content.name}</td>
+                  <td>{content.description}</td>
+                  <td>{content.flavor_profile}</td>
+
+                  <td><Button to={`/userpage/${content.id}/${username}/${view}`}>Add {view} to favorite list</Button></td>
+
+
+                 
+                  {view === 'cuisines' && content.spices && (
+                    <>
+                    <td>
+                      <Button onClick={() => toggleCuisineDropdown(content.id)}>
+                        {expandedCuisines.includes(content.id) ? 'Hide recommended spices' : 'View recommended spices'}
+                        </Button>
+                        </td>
+
+
+                        {expandedCuisines.includes(content.id) && (
+                          <td>
+                            {content.spices.map((spice) => spice.name).join(', ')}
+                            </td>
+                          )}
+                          
+                          </>
+                        )}
                 </tr>
               ))}
             </tbody>
           </Table>
         )}
       </DropdownWrapper>
-
-      {isLoggedIn && (
-        <div>
-          <button>Favorite List</button>
-          <button>Search</button>
-          <button>Add Spice</button>
-        </div>
-      )}
     </>
   );
 }
