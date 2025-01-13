@@ -103,23 +103,20 @@ const App = () => {
     <div>
       <ThemeProvider theme={theme}>
         <Header>
-          <Logo onClick={() => navigate("/home")}>
+          <Logo onClick={() => navigate("/")}>
             <LogoImg
               src="https://culinarylabschool.com/wp-content/uploads/2018/03/spices.jpg"
               alt="Logo"
             />
-            <LogoText>MySite</LogoText>
+            <LogoText>Spices & Cuisines</LogoText>
           </Logo>
           <NavMenu>
-            <NavItem to="/home">Home</NavItem>
-            <NavItem to="/vision">Vision</NavItem>
-            <NavItem to="/spice">Spices</NavItem>
+          <NavItem to="/admin">Admin</NavItem>
             {isLoggedIn ? (
               <>
                <NavItemButton onClick={handleLogout}>Logout</NavItemButton>
               <NavItem to="/userprofile">Profile</NavItem>
               </>
-               
             ) : (
               <>
                 <NavItem to="/auth/login">Sign In</NavItem>

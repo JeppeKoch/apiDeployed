@@ -107,7 +107,7 @@ async function fetchPut(endpoint, data, authenticated = false) {
       delete: (id, authenticated = true) => fetchDelete(`/cuisines/cuisine/${id}`, authenticated),
     },
     favorites: {
-      getByUserId: (userId, authenticated = true) => fetchGet(`/users/${userId}/favorites`, authenticated),
+      getByUserName: (username, authenticated = true) => fetchGet(`/users/${username}/favorites`, authenticated),
       createFavorite: (username, data, authenticated = true) =>
         fetchPost(`/${username}/favorites`, data, authenticated),
       createSpiceFavorite: (username, spiceId, authenticated = true) =>
@@ -119,7 +119,7 @@ async function fetchPut(endpoint, data, authenticated = false) {
     },
     user: {
       getAll: (authenticated = true) => fetchGet("/users/", authenticated),
-      getById: (userId, authenticated = false) => fetchGet(`/users/${userId}`, authenticated),
+      getByName: (username, authenticated = false) => fetchGet(`/users/${username}`, authenticated),
     },
   };
   

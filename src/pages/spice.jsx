@@ -1,25 +1,22 @@
-import { useEffect, useState } from 'react';
-import { api } from '../services/Fetch';
+import { useEffect, useState } from "react";
+import { api } from "../services/Fetch";
 import styled, { ThemeProvider } from "styled-components";
-import { Link } from 'react-router';
-import { jwtDecode } from 'jwt-decode';
-import facade from '../services/apiFacade';
-
+import { Link } from "react-router";
+import { jwtDecode } from "jwt-decode";
+import facade from "../services/apiFacade";
 
 const NavBar = styled.div`
-display: flex;
+  display: flex;
   align-items: center;
   justify-content: space-between;
   background: #fff;
   padding: 10px 20px;
   border-bottom: 1px solid #ccc;
-  
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
     flex-direction: column;
     align-items: stretch;
   }
 `;
-
 
 const DropdownWrapper = styled.div`
   position: relative;
@@ -27,11 +24,12 @@ const DropdownWrapper = styled.div`
 `;
 
 const Table = styled.table`
- width: 100%;
+  width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
-  
-  th, td {
+
+  th,
+  td {
     border: 1px solid #ccc;
     padding: 8px;
     text-align: left;
@@ -40,10 +38,10 @@ const Table = styled.table`
   th {
     background-color: #f5f5f5;
   }
-`
+`;
 
 const TopNav = styled.div`
-overflow: hidden;
+  overflow: hidden;
   float: right;
   padding: 6px;
   border: none;
@@ -51,7 +49,7 @@ overflow: hidden;
   margin-right: 16px;
   font-size: 17px;
 
-   @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+  @media (max-width: ${(props) => props.theme.breakpoints.mobile}) {
     float: none;
     display: block;
     text-align: left;
@@ -59,14 +57,12 @@ overflow: hidden;
     margin: 0;
     padding: 14px;
   }
-
-`
+`;
 const TopLeftNav = styled.div`
-display: flex;
+  display: flex;
   gap: 10px;
   align-content: center;
-
-`
+`;
 const Button = styled(Link)`
   position: relative;
   display: inline-block;
@@ -85,82 +81,76 @@ const Button = styled(Link)`
 `;
 
 function HomePage() {
-  
-  const [spices, setSpices] = useState([]); 
-  const [cuisines, setCuisines] = useState([])
+  const [spices, setSpices] = useState([]);
+  const [cuisines, setCuisines] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showTable, setShowTables] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('')
-  const [view, setView] = useState('spices')
+  const [searchTerm, setSearchTerm] = useState("");
+  const [view, setView] = useState("spices");
   const [expandedCuisines, setExpandedCuisines] = useState([]);
-  const token = facade.getToken()
-  let username = null
+  const token = facade.getToken();
+  let username = null;
+/*  UDKOMMENTERET SÅ DET KAN KØRE
+  if (token) {
+    console.log("Token fetched:", token);
 
-
-    if(token){
-      const decoded = jwtDecode(token);
-        username = decoded.sub
-  }
-
-
-
-
+    const decoded = jwtDecode(token);
+    username = decoded.sub;
+  } 
+*/
   useEffect(() => {
-    api.spices.getAll().then(data => {
+    api.spices.getAll().then((data) => {
       setSpices(data);
     });
-    api.cuisines.getAll().then(data => {
+    api.cuisines.getAll().then((data) => {
       setCuisines(data);
     });
   }, []);
 
   const toggleDropdown = () => {
-    setShowTables(prev => !prev);
+    setShowTables((prev) => !prev);
   };
 
   const toggleCuisineDropdown = (id) => {
-    setExpandedCuisines(prev => 
-      prev.includes(id) ? prev.filter(cId => cId !== id) : [...prev, id]
+    setExpandedCuisines((prev) =>
+      prev.includes(id) ? prev.filter((cId) => cId !== id) : [...prev, id]
     );
   };
-  const dataToFilter = view === 'spices' ? spices : cuisines;
+  const dataToFilter = view === "spices" ? spices : cuisines;
 
-  const filteredData = dataToFilter.filter(item => 
+  const filteredData = dataToFilter.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-
   const handleKeySearch = (e) => {
-    if(e.key === 'Enter'){
-      setShowTables(true)
+    if (e.key === "Enter") {
+      setShowTables(true);
     }
-  }
-
+  };
 
   return (
     <>
-           <NavBar>
+      <NavBar>
         <TopLeftNav>
-          <button onClick={() => setView('spices')}>Spices</button>
-          <button onClick={() => setView('cuisines')}>Cuisines</button>
+          <button onClick={() => setView("spices")}>Spices</button>
+          <button onClick={() => setView("cuisines")}>Cuisines</button>
         </TopLeftNav>
         <TopNav>
-          <input 
-            type="text" 
-            placeholder="Search by name" 
-            value={searchTerm} 
-            onChange={(e) => setSearchTerm(e.target.value)} 
-            onKeyDown={handleKeySearch} 
+          <input
+            type="text"
+            placeholder="Search by name"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={handleKeySearch}
           />
         </TopNav>
       </NavBar>
       <h1>Under here you will be able to see all the spices</h1>
       <p>Choose what you want to see:</p>
-     
 
       <DropdownWrapper>
-      <Button onClick={toggleDropdown}>
-      {showTable ? `Hide ${view}` : `Show all ${view}`}
+        <Button onClick={toggleDropdown}>
+          {showTable ? `Hide ${view}` : `Show all ${view}`}
         </Button>
         {showTable && (
           <Table>
@@ -178,27 +168,32 @@ function HomePage() {
                   <td>{content.description}</td>
                   <td>{content.flavor_profile}</td>
 
-                  <td><Button to={`/userpage/${content.id}/${username}/${view}`}>Add {view} to favorite list</Button></td>
+                  <td>
+                    <Button to={`/userpage/${content.id}/${username}/${view}`}>
+                      Add {view} to favorite list
+                    </Button>
+                  </td>
 
-
-                 
-                  {view === 'cuisines' && content.spices && (
+                  {view === "cuisines" && content.spices && (
                     <>
-                    <td>
-                      <Button onClick={() => toggleCuisineDropdown(content.id)}>
-                        {expandedCuisines.includes(content.id) ? 'Hide recommended spices' : 'View recommended spices'}
+                      <td>
+                        <Button
+                          onClick={() => toggleCuisineDropdown(content.id)}
+                        >
+                          {expandedCuisines.includes(content.id)
+                            ? "Hide recommended spices"
+                            : "View recommended spices"}
                         </Button>
-                        </td>
-
-
-                        {expandedCuisines.includes(content.id) && (
-                          <td>
-                            {content.spices.map((spice) => spice.name).join(', ')}
-                            </td>
-                          )}
-                          
-                          </>
-                        )}
+                      </td>
+                      
+                      
+                      {expandedCuisines.includes(content.id) && (
+                        <td>
+                          {content.spices.map((spice) => spice.name).join(", ")}
+                        </td> 
+                      )} 
+                    </>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -210,5 +205,3 @@ function HomePage() {
 }
 
 export default HomePage;
-
-  

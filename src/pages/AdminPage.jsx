@@ -25,26 +25,21 @@ function AdminPage() {
     description: "",
     flavor_profile: "",
   });
-  //   const [newUser, setNewUser] = useState({ name: "", role: "" });
+  //   const [usernameRole, setUsernameRole] = useState({ name: "", role: "" });
   const [showAddSpiceForm, setShowAddSpiceForm] = useState(false);
   const [showAddCuisineForm, setShowAddCuisineForm] = useState(false);
 
   /* FETCH */
   useEffect(() => {
-    api.spices.getAll().then(
-      (spiceData) => {
-        setSpices(spiceData);
-      },
-      api.cuisines.getAll().then(
-        (cuisineData) => {
-          setCuisines(cuisineData);
-        }
-        //   api.users.getAll().then(
-        // (userData) => {
-        //   setUsers(userData);
-        // })
-      )
-    );
+    api.spices.getAll().then((spiceData) => {
+      setSpices(spiceData);
+    }),
+      api.cuisines.getAll().then((cuisineData) => {
+        setCuisines(cuisineData);
+      }),
+      api.user.getAll().then((userData) => {
+        setUsers(userData);
+      });
   }, []);
 
   /* DISPLAY */
@@ -96,7 +91,6 @@ function AdminPage() {
       console.error("Failed to delete cuisine:", error);
     }
   };
-
 
   const deleteUser = async (id) => {
     try {
@@ -173,8 +167,8 @@ function AdminPage() {
   const createSpice = async () => {
     try {
       console.log("creating new spice:", newSpice); //debug
-      const createdSpice = await api.spices.create(newSpice, true);
-      setSpices([...spices, createdSpice]);
+      await api.spices.create(newSpice, true);
+      setSpices([...spices, newSpice]);
       setNewSpice({ name: "", description: "", flavor_profile: "" });
       setShowAddSpiceForm(false);
     } catch (error) {
@@ -185,8 +179,8 @@ function AdminPage() {
   const createCuisine = async () => {
     try {
       console.log("creating new cuisine:", newCuisine); //debug
-      const createdCuisine = await api.cuisines.create(newCuisine, true);
-      setCuisines([...cuisines, createdCuisine]);
+      await api.cuisines.create(newCuisine, true);
+      setCuisines([...cuisines, newCuisine]);
       setNewCuisine({ name: "", description: "", flavor_profile: "" });
       setShowAddCuisineForm(false);
     } catch (error) {
@@ -197,8 +191,11 @@ function AdminPage() {
   return (
     <>
       <h1>Admin Page</h1>
+      <button onClick={showCuisineHandler}>Show Cuisines</button>
+      <button onClick={showSpiceHandler}>Show Spices</button>
+      <button onClick={showUsersHandler}>Show Users (only if logged in as admin)</button>
+
       {/* CUISINES */}
-      <button onClick={showCuisineHandler}>Show Cuisine</button>
       {showCuisines && (
         <>
           <table>
@@ -290,7 +287,6 @@ function AdminPage() {
         </div>
       )}
       {/* SPICES */}
-      <button onClick={showSpiceHandler}>Show Spices</button>
       {showSpices && (
         <>
           <table>
@@ -382,7 +378,6 @@ function AdminPage() {
         </div>
       )}
       {/* USERS */}
-      <button onClick={showUsersHandler}>Show Users</button>
       {showUsers && (
         <table>
           <thead>
@@ -394,7 +389,7 @@ function AdminPage() {
           <tbody>
             {users.map((user) => (
               <tr key={user.id}>
-                <td>{user.name}</td>
+                <td>{user.user_name}</td>
                 <td>{user.role}</td>
                 <td>
                   <button onClick={() => deleteUser(user.id)}>Delete</button>

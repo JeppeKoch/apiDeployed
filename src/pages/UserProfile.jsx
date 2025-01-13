@@ -1,8 +1,9 @@
-import styled from 'styled-components';
-import { useState, useEffect} from 'react';
-import { useParams } from 'react-router';
-import { api } from '../services/Fetch';
-import facade from '../services/apiFacade';
+import styled from "styled-components";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router";
+import { api } from "../services/Fetch";
+import { jwtDecode } from "jwt-decode";
+import facade from "../services/apiFacade";
 
 // Mock user data
 const mockUser = {
@@ -10,7 +11,7 @@ const mockUser = {
   userName: "john.doe@example.com",
   joinDate: "January 2024",
 
-  avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=j"
+  avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=j",
 };
 
 // Styled Components
@@ -85,11 +86,12 @@ const Text = styled.p`
   color: #1f2937;
 `;
 const Table = styled.table`
- width: 100%;
+  width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
-  
-  th, td {
+
+  th,
+  td {
     border: 1px solid #ccc;
     padding: 8px;
     text-align: left;
@@ -98,10 +100,12 @@ const Table = styled.table`
   th {
     background-color: #f5f5f5;
   }
-`
-const Button = styled.button`
-  background-color: ${(props) => (props.active ? '#2563eb' : '#e5e7eb')};
-  color: ${(props) => (props.active ? 'white' : '#374151')};
+`;
+const Button = styled.button.withConfig({
+  shouldForwardProp: (prop) => prop !== "active",
+})`
+  background-color: ${(props) => (props.active ? "#2563eb" : "#e5e7eb")};
+  color: ${(props) => (props.active ? "white" : "#374151")};
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 0.375rem;
@@ -110,37 +114,45 @@ const Button = styled.button`
   text-align: center;
 
   &:hover {
-    background-color: ${(props) => (props.active ? '#1d4ed8' : '#d1d5db')};
+    background-color: ${(props) => (props.active ? "#1d4ed8" : "#d1d5db")};
   }
 `;
 
 function UserProfile() {
   const user = mockUser;
   const [activeView, setActiveView] = useState(null);
-  const [favorites, setFavorites] = useState([])
-  const {id, username, listType } = useParams();
+  const [favorites, setFavorites] = useState([]);
+  const { id, username, listType } = useParams();
+  const [currentUser, setCurrentUser] = useState([]);
+  const navigate = useNavigate();
+  const token = facade.getToken();
+  let userName = null;
 
   // Handler for the "Add New" button
   const handleAddNew = () => {
-    alert("Redirect or open a modal to add a new spice or cuisine.");
+    // alert("Redirect or open a modal to add a new spice or cuisine.");
+    navigate("/spice");
   };
 
-  // useEffect(() => {
-  //   api.favorites.getByUserId(userId).then(data => {
-  //     setFavorites(data);
-  //   })
-  // }, []);
+  // UDKOMMENTERET SÅ DET KAN KØRE
+  if (token) {
+    const decoded = jwtDecode(token);
+    userName = decoded.sub;
+  }
 
+  useEffect(() => {
+    api.favorites.getByUserName(userName).then((data) => {
+      setFavorites(data);
+    });
+  }, [userName]);
 
   const addContent = () => {
-    if(listType === "spices"){
-    api.favorites.createSpiceFavorite(username, id)
-  }
-  else if(listType === "cuisines"){
-    api.favorites.createCuisineFavorite(username, id)
-  }
-  
-  }
+    if (listType === "spices") {
+      api.favorites.createSpiceFavorite(username, id);
+    } else if (listType === "cuisines") {
+      api.favorites.createCuisineFavorite(username, id);
+    }
+  };
 
   return (
     <Container>
@@ -151,7 +163,11 @@ function UserProfile() {
             <HeaderContent>
               <Avatar src={user.avatarUrl} alt={`${user.name}'s avatar`} />
               <div>
-                <Title>{user.name}</Title>
+                {currentUser ? (
+                  <Title>{favorites.name}</Title>
+                ) : (
+                  <Title>{user.name}</Title>
+                )}
               </div>
             </HeaderContent>
           </Header>
@@ -174,22 +190,27 @@ function UserProfile() {
               <Section>
                 <Label>See Favorite Lists</Label>
                 <Button
-                  active={activeView === 'spices'}
-                  onClick={() => setActiveView(activeView === 'spices' ? null : 'spices')}
-                >
-                Spices
-                </Button>
-                <Button
-                  active={activeView === 'cuisines'}
-                  onClick={() => setActiveView(activeView === 'cuisines' ? null : 'cuisines')
+                  active={activeView === "spices"}
+                  onClick={() =>
+                    setActiveView(activeView === "spices" ? null : "spices")
                   }
                 >
-                Cuisines
+                  Spices
+                </Button>
+                <Button
+                  active={activeView === "cuisines"}
+                  onClick={() =>
+                    setActiveView(activeView === "cuisines" ? null : "cuisines")
+                  }
+                >
+                  Cuisines
                 </Button>
 
-                <td><Button onClick={addContent}>Add {listType} to list</Button></td>
-                {activeView &&(
-                    <Table>
+                <td>
+                  <Button onClick={addContent}>Add {listType} to list</Button>
+                </td>
+                {activeView && (
+                  <Table>
                     <thead>
                       <tr>
                         <th>Name</th>
@@ -198,18 +219,16 @@ function UserProfile() {
                       </tr>
                     </thead>
                     <tbody>
-                     {favorites.map(content => (
+                      {favorites.map((content) => (
                         <tr key={content.id}>
                           <td>{content.name}</td>
                           <td>{content.description}</td>
                           <td>{content.flavor_profile}</td>
-                       </tr>
-                ))}
+                        </tr>
+                      ))}
                     </tbody>
                   </Table>
-                )
-
-                }
+                )}
                 <Button onClick={handleAddNew}>
                   Add New Spice/Cuisine to List
                 </Button>
